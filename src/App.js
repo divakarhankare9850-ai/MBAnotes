@@ -17,8 +17,6 @@ import {
 } from "firebase/storage";
 
 /* ================= FIREBASE CONFIG ================= */
-// 🔴 REPLACE THIS
-
 const firebaseConfig = {
   apiKey: "AIzaSyDDbdNTJ-x4gyD0VsyNfX6czmTHX_fDiaM",
   authDomain: "notesmba-5379c.firebaseapp.com",
@@ -27,7 +25,6 @@ const firebaseConfig = {
   messagingSenderId: "969677120738",
   appId: "1:969677120738:web:617750a5c8e1bdd6722abb"
 };
-
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -41,56 +38,16 @@ const STUDENTS = Array.from({ length: 71 }, (_, i) => {
   return `25PMB${num}`;
 });
 
-/* ================= SUBJECTS (UPDATED) ================= */
+/* ================= SUBJECTS ================= */
 const SUBJECTS = [
-  {
-    name: "Marketing Management",
-    id: "marketing",
-    icon: "📊",
-    color: "linear-gradient(135deg, #ff7e5f, #feb47b)",
-  },
-  {
-    name: "Financial Management",
-    id: "finance",
-    icon: "💰",
-    color: "linear-gradient(135deg, #43cea2, #185a9d)",
-  },
-  {
-    name: "Human Resource Management",
-    id: "hrm",
-    icon: "👥",
-    color: "linear-gradient(135deg, #ff9966, #ff5e62)",
-  },
-  {
-    name: "Operations Techniques and Management",
-    id: "operations",
-    icon: "⚙️",
-    color: "linear-gradient(135deg, #36d1dc, #5b86e5)",
-  },
-  {
-    name: "Basics of Strategic Management",
-    id: "strategy",
-    icon: "🎯",
-    color: "linear-gradient(135deg, #c471f5, #fa71cd)",
-  },
-  {
-    name: "Research Methodology",
-    id: "research",
-    icon: "🔬",
-    color: "linear-gradient(135deg, #00c6ff, #0072ff)",
-  },
-  {
-    name: "Decision Analysis Techniques for Managers",
-    id: "decision",
-    icon: "📈",
-    color: "linear-gradient(135deg, #f7971e, #ffd200)",
-  },
-  {
-    name: "Business Environment",
-    id: "business",
-    icon: "🏢",
-    color: "linear-gradient(135deg, #654ea3, #eaafc8)",
-  },
+  { name: "Marketing Management", id: "marketing", icon: "📊", color: "linear-gradient(135deg, #ff7e5f, #feb47b)" },
+  { name: "Financial Management", id: "finance", icon: "💰", color: "linear-gradient(135deg, #43cea2, #185a9d)" },
+  { name: "Human Resource Management", id: "hrm", icon: "👥", color: "linear-gradient(135deg, #ff9966, #ff5e62)" },
+  { name: "Operations Techniques and Management", id: "operations", icon: "⚙️", color: "linear-gradient(135deg, #36d1dc, #5b86e5)" },
+  { name: "Basics of Strategic Management", id: "strategy", icon: "🎯", color: "linear-gradient(135deg, #c471f5, #fa71cd)" },
+  { name: "Research Methodology", id: "research", icon: "🔬", color: "linear-gradient(135deg, #00c6ff, #0072ff)" },
+  { name: "Decision Analysis Techniques for Managers", id: "decision", icon: "📈", color: "linear-gradient(135deg, #f7971e, #ffd200)" },
+  { name: "Business Environment", id: "business", icon: "🏢", color: "linear-gradient(135deg, #654ea3, #eaafc8)" },
 ];
 
 /* ================= APP ================= */
@@ -104,7 +61,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
 
-  /* LOGIN */
   const handleLogin = (username, password) => {
     if (username === ADMIN.username && password === ADMIN.password) {
       setUser(username);
@@ -128,7 +84,6 @@ export default function App() {
     setPage("login");
   };
 
-  /* FETCH NOTES */
   const fetchNotes = async (subjectId) => {
     setLoading(true);
     try {
@@ -141,7 +96,6 @@ export default function App() {
     setLoading(false);
   };
 
-  /* UPLOAD */
   const uploadNote = async () => {
     if (!file || !selectedSubject) return alert("Select file");
 
@@ -149,7 +103,7 @@ export default function App() {
     try {
       const storageRef = ref(
         storage,
-        `notes/${selectedSubject.id}/${file.name}`
+        `notes/${selectedSubject.id}/${Date.now()}_${file.name}`
       );
 
       await uploadBytes(storageRef, file);
@@ -169,14 +123,11 @@ export default function App() {
     setLoading(false);
   };
 
-  /* DELETE */
   const deleteNote = async (note) => {
     if (!window.confirm("Delete this file?")) return;
 
     try {
-      await deleteDoc(
-        doc(db, "notes_" + selectedSubject.id, note.id)
-      );
+      await deleteDoc(doc(db, "notes_" + selectedSubject.id, note.id));
 
       await deleteObject(
         ref(storage, `notes/${selectedSubject.id}/${note.name}`)
@@ -188,10 +139,8 @@ export default function App() {
     }
   };
 
-  /* LOGIN PAGE */
   if (page === "login") return <Login onLogin={handleLogin} />;
 
-  /* DASHBOARD */
   return (
     <div style={styles.container}>
       <Navbar user={user} role={role} logout={logout} />
@@ -206,31 +155,27 @@ export default function App() {
                 setSelectedSubject(sub);
                 fetchNotes(sub.id);
               }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.06)"}
+              onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
             >
-              <h2>{sub.icon}</h2>
-              <p>{sub.name}</p>
+              <h2 style={{ fontSize: 32 }}>{sub.icon}</h2>
+              <p style={{ fontWeight: "600" }}>{sub.name}</p>
             </div>
           ))}
         </div>
       ) : (
-        <div style={{ padding: 20 }}>
-          <button
-            style={styles.backBtn}
-            onClick={() => setSelectedSubject(null)}
-          >
+        <div style={{ padding: 25 }}>
+          <button style={styles.backBtn} onClick={() => setSelectedSubject(null)}>
             ← Back
           </button>
 
-          <h2>
+          <h2 style={{ marginBottom: 10 }}>
             {selectedSubject.icon} {selectedSubject.name}
           </h2>
 
           {role === "admin" && (
             <div style={styles.uploadBox}>
-              <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-              />
+              <input type="file" onChange={(e) => setFile(e.target.files[0])} />
               <button onClick={uploadNote} style={styles.btn}>
                 Upload
               </button>
@@ -243,8 +188,10 @@ export default function App() {
           <div style={styles.notesList}>
             {notes.map((note) => (
               <div key={note.id} style={styles.noteCard}>
-                <p>{note.name}</p>
-                <small>{note.createdAt}</small>
+                <div>
+                  <p style={{ fontWeight: "600" }}>{note.name}</p>
+                  <small>{note.createdAt}</small>
+                </div>
 
                 <div>
                   <a href={note.url} target="_blank" rel="noreferrer">
@@ -252,10 +199,7 @@ export default function App() {
                   </a>
 
                   {role === "admin" && (
-                    <button
-                      onClick={() => deleteNote(note)}
-                      style={styles.deleteBtn}
-                    >
+                    <button onClick={() => deleteNote(note)} style={styles.deleteBtn}>
                       Delete
                     </button>
                   )}
@@ -276,14 +220,12 @@ function Login({ onLogin }) {
 
   return (
     <div style={styles.login}>
-      <h2>📚 College Notes Portal</h2>
-      <input placeholder="Username" onChange={(e) => setU(e.target.value)} />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setP(e.target.value)}
-      />
-      <button onClick={() => onLogin(u, p)}>Login</button>
+      <h2 style={{ marginBottom: 10 }}>📚 College Notes Portal</h2>
+      <input style={styles.input} placeholder="Username" onChange={(e) => setU(e.target.value)} />
+      <input style={styles.input} type="password" placeholder="Password" onChange={(e) => setP(e.target.value)} />
+      <button style={styles.btn} onClick={() => onLogin(u, p)}>
+        Login
+      </button>
     </div>
   );
 }
@@ -292,10 +234,10 @@ function Login({ onLogin }) {
 function Navbar({ user, role, logout }) {
   return (
     <div style={styles.nav}>
-      <h3>Notes SaaS</h3>
+      <h3>📘 Notes SaaS</h3>
       <div>
         {user} ({role})
-        <button onClick={logout}>Logout</button>
+        <button onClick={logout} style={styles.logout}>Logout</button>
       </div>
     </div>
   );
@@ -305,59 +247,75 @@ function Navbar({ user, role, logout }) {
 const styles = {
   container: {
     minHeight: "100vh",
-    background: "#0f2027",
+    background: "linear-gradient(135deg, #1f4037, #99f2c8)",
     color: "white",
-    fontFamily: "sans-serif",
+    fontFamily: "Poppins, sans-serif",
   },
   nav: {
     display: "flex",
     justifyContent: "space-between",
     padding: 15,
-    background: "#203a43",
+    background: "rgba(0,0,0,0.4)",
+    backdropFilter: "blur(10px)",
+  },
+  logout: {
+    marginLeft: 10,
+    padding: "6px 12px",
+    borderRadius: 6,
+    border: "none",
+    cursor: "pointer",
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px,1fr))",
-    gap: 20,
-    padding: 20,
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px,1fr))",
+    gap: 25,
+    padding: 30,
   },
   card: {
-    padding: 20,
-    borderRadius: 12,
+    padding: 25,
+    borderRadius: 16,
     cursor: "pointer",
     textAlign: "center",
     color: "white",
     transition: "0.3s",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
   },
   uploadBox: {
     margin: "20px 0",
   },
   btn: {
     marginLeft: 10,
-    padding: "8px 15px",
+    padding: "10px 18px",
     border: "none",
-    borderRadius: 6,
-    background: "#00c6ff",
+    borderRadius: 8,
+    background: "linear-gradient(135deg, #667eea, #764ba2)",
     color: "white",
+    cursor: "pointer",
   },
   backBtn: {
     marginBottom: 10,
   },
   notesList: {
     display: "grid",
-    gap: 10,
+    gap: 15,
   },
   noteCard: {
-    background: "white",
-    color: "black",
-    padding: 10,
-    borderRadius: 8,
+    background: "rgba(255,255,255,0.9)",
+    color: "#333",
+    padding: 15,
+    borderRadius: 12,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   deleteBtn: {
     marginLeft: 10,
-    background: "red",
+    background: "#ff4b5c",
     color: "white",
     border: "none",
+    padding: "6px 12px",
+    borderRadius: 6,
+    cursor: "pointer",
   },
   login: {
     height: "100vh",
@@ -365,6 +323,13 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
+    gap: 15,
+    background: "linear-gradient(135deg, #667eea, #764ba2)",
+  },
+  input: {
+    padding: 12,
+    width: 260,
+    borderRadius: 8,
+    border: "none",
   },
 };
