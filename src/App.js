@@ -40,14 +40,14 @@ const STUDENTS = Array.from({ length: 71 }, (_, i) => {
 
 /* ================= SUBJECTS ================= */
 const SUBJECTS = [
-  { name: "Marketing Management", id: "marketing", icon: "📊", color: "linear-gradient(135deg, #6366f1, #8b5cf6)" },
-  { name: "Financial Management", id: "finance", icon: "💰", color: "linear-gradient(135deg, #06b6d4, #3b82f6)" },
-  { name: "Human Resource Management", id: "hrm", icon: "👥", color: "linear-gradient(135deg, #f43f5e, #fb7185)" },
-  { name: "Operations Techniques and Management", id: "operations", icon: "⚙️", color: "linear-gradient(135deg, #10b981, #22c55e)" },
-  { name: "Basics of Strategic Management", id: "strategy", icon: "🎯", color: "linear-gradient(135deg, #8b5cf6, #ec4899)" },
-  { name: "Research Methodology", id: "research", icon: "🔬", color: "linear-gradient(135deg, #0ea5e9, #6366f1)" },
-  { name: "Decision Analysis Techniques for Managers", id: "decision", icon: "📈", color: "linear-gradient(135deg, #f59e0b, #f97316)" },
-  { name: "Business Environment", id: "business", icon: "🏢", color: "linear-gradient(135deg, #64748b, #334155)" },
+  { name: "Marketing Management", id: "marketing", icon: "📊" },
+  { name: "Financial Management", id: "finance", icon: "💰" },
+  { name: "Human Resource Management", id: "hrm", icon: "👥" },
+  { name: "Operations Techniques and Management", id: "operations", icon: "⚙️" },
+  { name: "Basics of Strategic Management", id: "strategy", icon: "🎯" },
+  { name: "Research Methodology", id: "research", icon: "🔬" },
+  { name: "Decision Analysis Techniques for Managers", id: "decision", icon: "📈" },
+  { name: "Business Environment", id: "business", icon: "🏢" },
 ];
 
 /* ================= APP ================= */
@@ -141,29 +141,35 @@ export default function App() {
 
   return (
     <div style={styles.app}>
-      <Navbar user={user} role={role} logout={logout} />
+      <header style={styles.header}>
+        <div style={styles.headerContent}>
+          <h3 style={styles.logo}>Notes</h3>
+          <div style={styles.userSection}>
+            <span style={styles.userText}>{user} ({role})</span>
+            <button onClick={logout} style={styles.secondaryBtn}>Logout</button>
+          </div>
+        </div>
+      </header>
 
       <main style={styles.main}>
         {!selectedSubject ? (
-          <section style={styles.grid}>
+          <div style={styles.grid}>
             {SUBJECTS.map((sub) => (
               <div
                 key={sub.id}
-                style={{ ...styles.card, background: sub.color }}
+                style={styles.card}
                 onClick={() => {
                   setSelectedSubject(sub);
                   fetchNotes(sub.id);
                 }}
               >
-                <div style={styles.cardContent}>
-                  <span style={styles.icon}>{sub.icon}</span>
-                  <span style={styles.cardTitle}>{sub.name}</span>
-                </div>
+                <div style={styles.cardIcon}>{sub.icon}</div>
+                <div style={styles.cardText}>{sub.name}</div>
               </div>
             ))}
-          </section>
+          </div>
         ) : (
-          <section style={styles.content}>
+          <div style={styles.content}>
             <button style={styles.backBtn} onClick={() => setSelectedSubject(null)}>
               ← Back
             </button>
@@ -174,15 +180,21 @@ export default function App() {
 
             {role === "admin" && (
               <div style={styles.upload}>
-                <input style={styles.input} type="file" onChange={(e) => setFile(e.target.files[0])} />
-                <button style={styles.primaryBtn} onClick={uploadNote}>
+                <input
+                  type="file"
+                  style={styles.input}
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+                <button onClick={uploadNote} style={styles.primaryBtn}>
                   Upload
                 </button>
               </div>
             )}
 
-            {loading && <p>Loading...</p>}
-            {!loading && notes.length === 0 && <p>No notes available</p>}
+            {loading && <p style={styles.meta}>Loading...</p>}
+            {!loading && notes.length === 0 && (
+              <p style={styles.meta}>No notes available</p>
+            )}
 
             <div style={styles.notes}>
               {notes.map((note) => (
@@ -193,11 +205,20 @@ export default function App() {
                   </div>
 
                   <div style={styles.actions}>
-                    <a style={styles.link} href={note.url} target="_blank" rel="noreferrer">
+                    <a
+                      href={note.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={styles.link}
+                    >
                       Open
                     </a>
+
                     {role === "admin" && (
-                      <button style={styles.dangerBtn} onClick={() => deleteNote(note)}>
+                      <button
+                        onClick={() => deleteNote(note)}
+                        style={styles.dangerBtn}
+                      >
                         Delete
                       </button>
                     )}
@@ -205,7 +226,7 @@ export default function App() {
                 </div>
               ))}
             </div>
-          </section>
+          </div>
         )}
       </main>
     </div>
@@ -220,72 +241,97 @@ function Login({ onLogin }) {
   return (
     <div style={styles.login}>
       <div style={styles.loginCard}>
-        <h2 style={styles.loginTitle}>Welcome Back</h2>
+        <h2 style={styles.loginTitle}>Sign in</h2>
         <input style={styles.input} placeholder="Username" onChange={(e) => setU(e.target.value)} />
         <input style={styles.input} type="password" placeholder="Password" onChange={(e) => setP(e.target.value)} />
         <button style={styles.primaryBtn} onClick={() => onLogin(u, p)}>
-          Login
+          Continue
         </button>
       </div>
     </div>
   );
 }
 
-/* NAVBAR */
-function Navbar({ user, role, logout }) {
-  return (
-    <header style={styles.nav}>
-      <h3>Notes Dashboard</h3>
-      <div style={styles.navRight}>
-        <span>{user} ({role})</span>
-        <button style={styles.secondaryBtn} onClick={logout}>Logout</button>
-      </div>
-    </header>
-  );
-}
-
 /* ================= DESIGN SYSTEM ================= */
 const styles = {
-  app: { minHeight: "100vh", background: "#f8fafc", fontFamily: "Inter, sans-serif" },
+  app: {
+    minHeight: "100vh",
+    background: "#f9fafb",
+    fontFamily: "Inter, system-ui, sans-serif",
+  },
 
-  nav: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "16px 32px",
+  header: {
     background: "#ffffff",
     borderBottom: "1px solid #e5e7eb",
   },
 
-  navRight: { display: "flex", gap: 16, alignItems: "center" },
+  headerContent: {
+    maxWidth: 1100,
+    margin: "0 auto",
+    padding: "16px 24px",
+    display: "flex",
+    justifyContent: "space-between",
+  },
 
-  main: { padding: 32 },
+  logo: {
+    fontWeight: 600,
+  },
+
+  userSection: {
+    display: "flex",
+    gap: 12,
+    alignItems: "center",
+  },
+
+  userText: {
+    color: "#6b7280",
+    fontSize: 14,
+  },
+
+  main: {
+    maxWidth: 1100,
+    margin: "0 auto",
+    padding: 32,
+  },
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
-    gap: 24,
+    gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
+    gap: 20,
   },
 
   card: {
+    background: "#ffffff",
     padding: 24,
-    borderRadius: 16,
-    color: "#fff",
+    borderRadius: 12,
+    border: "1px solid #e5e7eb",
     cursor: "pointer",
     transition: "all 0.2s ease",
-    boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
   },
 
-  cardContent: { display: "flex", flexDirection: "column", gap: 12 },
+  cardIcon: {
+    fontSize: 28,
+    marginBottom: 10,
+  },
 
-  icon: { fontSize: 28 },
+  cardText: {
+    fontWeight: 500,
+  },
 
-  cardTitle: { fontWeight: 600 },
+  content: {
+    maxWidth: 700,
+    margin: "0 auto",
+  },
 
-  content: { maxWidth: 900, margin: "auto" },
+  heading: {
+    marginBottom: 20,
+  },
 
-  heading: { marginBottom: 16 },
-
-  upload: { display: "flex", gap: 12, marginBottom: 20 },
+  upload: {
+    display: "flex",
+    gap: 10,
+    marginBottom: 20,
+  },
 
   input: {
     padding: 10,
@@ -295,68 +341,88 @@ const styles = {
   },
 
   primaryBtn: {
-    background: "#6366f1",
-    color: "#fff",
-    border: "none",
+    background: "#4f46e5",
+    color: "white",
     padding: "10px 16px",
     borderRadius: 8,
+    border: "none",
     cursor: "pointer",
   },
 
   secondaryBtn: {
-    background: "#e5e7eb",
-    border: "none",
+    background: "#f3f4f6",
     padding: "8px 12px",
     borderRadius: 6,
-    cursor: "pointer",
+    border: "none",
   },
 
   dangerBtn: {
     background: "#ef4444",
-    color: "#fff",
-    border: "none",
+    color: "white",
     padding: "6px 10px",
     borderRadius: 6,
+    border: "none",
   },
 
-  notes: { display: "grid", gap: 12 },
+  notes: {
+    display: "grid",
+    gap: 12,
+  },
 
   note: {
     background: "#fff",
     padding: 16,
     borderRadius: 10,
+    border: "1px solid #e5e7eb",
     display: "flex",
     justifyContent: "space-between",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
   },
 
-  noteTitle: { fontWeight: 500 },
+  noteTitle: {
+    fontWeight: 500,
+  },
 
-  meta: { fontSize: 12, color: "#6b7280" },
+  meta: {
+    fontSize: 12,
+    color: "#6b7280",
+  },
 
-  actions: { display: "flex", gap: 10, alignItems: "center" },
+  actions: {
+    display: "flex",
+    gap: 10,
+    alignItems: "center",
+  },
 
-  link: { color: "#6366f1", fontWeight: 500 },
+  link: {
+    color: "#4f46e5",
+    fontWeight: 500,
+  },
 
-  backBtn: { marginBottom: 10, cursor: "pointer" },
+  backBtn: {
+    marginBottom: 10,
+  },
 
   login: {
     height: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
+    background: "#f3f4f6",
   },
 
   loginCard: {
     background: "#fff",
     padding: 32,
     borderRadius: 12,
+    border: "1px solid #e5e7eb",
     display: "flex",
     flexDirection: "column",
     gap: 12,
-    width: 300,
+    width: 280,
   },
 
-  loginTitle: { textAlign: "center", marginBottom: 10 },
+  loginTitle: {
+    marginBottom: 10,
+    textAlign: "center",
+  },
 };
