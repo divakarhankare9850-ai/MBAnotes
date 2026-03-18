@@ -40,14 +40,14 @@ const STUDENTS = Array.from({ length: 71 }, (_, i) => {
 
 /* ================= SUBJECTS ================= */
 const SUBJECTS = [
-  { name: "Marketing Management", id: "marketing", icon: "📊", color: "linear-gradient(135deg, #ff7e5f, #feb47b)" },
-  { name: "Financial Management", id: "finance", icon: "💰", color: "linear-gradient(135deg, #43cea2, #185a9d)" },
-  { name: "Human Resource Management", id: "hrm", icon: "👥", color: "linear-gradient(135deg, #ff9966, #ff5e62)" },
-  { name: "Operations Techniques and Management", id: "operations", icon: "⚙️", color: "linear-gradient(135deg, #36d1dc, #5b86e5)" },
-  { name: "Basics of Strategic Management", id: "strategy", icon: "🎯", color: "linear-gradient(135deg, #c471f5, #fa71cd)" },
-  { name: "Research Methodology", id: "research", icon: "🔬", color: "linear-gradient(135deg, #00c6ff, #0072ff)" },
-  { name: "Decision Analysis Techniques for Managers", id: "decision", icon: "📈", color: "linear-gradient(135deg, #f7971e, #ffd200)" },
-  { name: "Business Environment", id: "business", icon: "🏢", color: "linear-gradient(135deg, #654ea3, #eaafc8)" },
+  { name: "Marketing Management", id: "marketing", icon: "📊", color: "linear-gradient(135deg, #6366f1, #8b5cf6)" },
+  { name: "Financial Management", id: "finance", icon: "💰", color: "linear-gradient(135deg, #06b6d4, #3b82f6)" },
+  { name: "Human Resource Management", id: "hrm", icon: "👥", color: "linear-gradient(135deg, #f43f5e, #fb7185)" },
+  { name: "Operations Techniques and Management", id: "operations", icon: "⚙️", color: "linear-gradient(135deg, #10b981, #22c55e)" },
+  { name: "Basics of Strategic Management", id: "strategy", icon: "🎯", color: "linear-gradient(135deg, #8b5cf6, #ec4899)" },
+  { name: "Research Methodology", id: "research", icon: "🔬", color: "linear-gradient(135deg, #0ea5e9, #6366f1)" },
+  { name: "Decision Analysis Techniques for Managers", id: "decision", icon: "📈", color: "linear-gradient(135deg, #f59e0b, #f97316)" },
+  { name: "Business Environment", id: "business", icon: "🏢", color: "linear-gradient(135deg, #64748b, #334155)" },
 ];
 
 /* ================= APP ================= */
@@ -140,12 +140,12 @@ export default function App() {
   if (page === "login") return <Login onLogin={handleLogin} />;
 
   return (
-    <div style={styles.container}>
+    <div style={styles.app}>
       <Navbar user={user} role={role} logout={logout} />
 
-      <div style={styles.contentWrapper}>
+      <main style={styles.main}>
         {!selectedSubject ? (
-          <div style={styles.grid}>
+          <section style={styles.grid}>
             {SUBJECTS.map((sub) => (
               <div
                 key={sub.id}
@@ -154,18 +154,16 @@ export default function App() {
                   setSelectedSubject(sub);
                   fetchNotes(sub.id);
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-6px)"}
-                onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0px)"}
               >
-                <div style={styles.cardInner}>
-                  <div style={styles.icon}>{sub.icon}</div>
-                  <p style={styles.cardTitle}>{sub.name}</p>
+                <div style={styles.cardContent}>
+                  <span style={styles.icon}>{sub.icon}</span>
+                  <span style={styles.cardTitle}>{sub.name}</span>
                 </div>
               </div>
             ))}
-          </div>
+          </section>
         ) : (
-          <div style={styles.subjectPage}>
+          <section style={styles.content}>
             <button style={styles.backBtn} onClick={() => setSelectedSubject(null)}>
               ← Back
             </button>
@@ -175,9 +173,9 @@ export default function App() {
             </h2>
 
             {role === "admin" && (
-              <div style={styles.uploadBox}>
-                <input style={styles.fileInput} type="file" onChange={(e) => setFile(e.target.files[0])} />
-                <button onClick={uploadNote} style={styles.btn}>
+              <div style={styles.upload}>
+                <input style={styles.input} type="file" onChange={(e) => setFile(e.target.files[0])} />
+                <button style={styles.primaryBtn} onClick={uploadNote}>
                   Upload
                 </button>
               </div>
@@ -186,21 +184,20 @@ export default function App() {
             {loading && <p>Loading...</p>}
             {!loading && notes.length === 0 && <p>No notes available</p>}
 
-            <div style={styles.notesList}>
+            <div style={styles.notes}>
               {notes.map((note) => (
-                <div key={note.id} style={styles.noteCard}>
+                <div key={note.id} style={styles.note}>
                   <div>
                     <p style={styles.noteTitle}>{note.name}</p>
-                    <small>{note.createdAt}</small>
+                    <span style={styles.meta}>{note.createdAt}</span>
                   </div>
 
-                  <div style={styles.noteActions}>
+                  <div style={styles.actions}>
                     <a style={styles.link} href={note.url} target="_blank" rel="noreferrer">
                       Open
                     </a>
-
                     {role === "admin" && (
-                      <button onClick={() => deleteNote(note)} style={styles.deleteBtn}>
+                      <button style={styles.dangerBtn} onClick={() => deleteNote(note)}>
                         Delete
                       </button>
                     )}
@@ -208,9 +205,9 @@ export default function App() {
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         )}
-      </div>
+      </main>
     </div>
   );
 }
@@ -223,10 +220,10 @@ function Login({ onLogin }) {
   return (
     <div style={styles.login}>
       <div style={styles.loginCard}>
-        <h2 style={styles.loginTitle}>📚 Notes Portal</h2>
+        <h2 style={styles.loginTitle}>Welcome Back</h2>
         <input style={styles.input} placeholder="Username" onChange={(e) => setU(e.target.value)} />
         <input style={styles.input} type="password" placeholder="Password" onChange={(e) => setP(e.target.value)} />
-        <button style={styles.btn} onClick={() => onLogin(u, p)}>
+        <button style={styles.primaryBtn} onClick={() => onLogin(u, p)}>
           Login
         </button>
       </div>
@@ -237,173 +234,129 @@ function Login({ onLogin }) {
 /* NAVBAR */
 function Navbar({ user, role, logout }) {
   return (
-    <div style={styles.nav}>
-      <h3 style={{ fontWeight: "600" }}>📘 Notes Dashboard</h3>
+    <header style={styles.nav}>
+      <h3>Notes Dashboard</h3>
       <div style={styles.navRight}>
         <span>{user} ({role})</span>
-        <button onClick={logout} style={styles.logout}>Logout</button>
+        <button style={styles.secondaryBtn} onClick={logout}>Logout</button>
       </div>
-    </div>
+    </header>
   );
 }
 
-/* STYLES */
+/* ================= DESIGN SYSTEM ================= */
 const styles = {
-  container: {
-    minHeight: "100vh",
-    background: "#f5f7fb",
-    fontFamily: "system-ui",
-  },
+  app: { minHeight: "100vh", background: "#f8fafc", fontFamily: "Inter, sans-serif" },
 
   nav: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "15px 30px",
-    background: "#4f46e5",
-    color: "white",
+    padding: "16px 32px",
+    background: "#ffffff",
+    borderBottom: "1px solid #e5e7eb",
   },
 
-  navRight: {
-    display: "flex",
-    alignItems: "center",
-    gap: 15,
-  },
+  navRight: { display: "flex", gap: 16, alignItems: "center" },
 
-  contentWrapper: {
-    padding: 30,
-  },
+  main: { padding: 32 },
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(260px,1fr))",
-    gap: 25,
+    gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
+    gap: 24,
   },
 
   card: {
-    padding: 25,
+    padding: 24,
     borderRadius: 16,
-    color: "white",
+    color: "#fff",
     cursor: "pointer",
-    transition: "0.3s",
-    boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+    transition: "all 0.2s ease",
+    boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
   },
 
-  cardInner: {
-    textAlign: "center",
+  cardContent: { display: "flex", flexDirection: "column", gap: 12 },
+
+  icon: { fontSize: 28 },
+
+  cardTitle: { fontWeight: 600 },
+
+  content: { maxWidth: 900, margin: "auto" },
+
+  heading: { marginBottom: 16 },
+
+  upload: { display: "flex", gap: 12, marginBottom: 20 },
+
+  input: {
+    padding: 10,
+    borderRadius: 8,
+    border: "1px solid #d1d5db",
+    outline: "none",
   },
 
-  icon: {
-    fontSize: 32,
-    marginBottom: 10,
-  },
-
-  cardTitle: {
-    fontWeight: "600",
-  },
-
-  subjectPage: {
-    maxWidth: 900,
-    margin: "auto",
-  },
-
-  heading: {
-    marginBottom: 20,
-  },
-
-  uploadBox: {
-    display: "flex",
-    gap: 10,
-    marginBottom: 20,
-  },
-
-  fileInput: {
-    padding: 8,
-  },
-
-  btn: {
+  primaryBtn: {
+    background: "#6366f1",
+    color: "#fff",
+    border: "none",
     padding: "10px 16px",
     borderRadius: 8,
-    border: "none",
-    background: "#4f46e5",
-    color: "white",
     cursor: "pointer",
   },
 
-  notesList: {
-    display: "grid",
-    gap: 15,
+  secondaryBtn: {
+    background: "#e5e7eb",
+    border: "none",
+    padding: "8px 12px",
+    borderRadius: 6,
+    cursor: "pointer",
   },
 
-  noteCard: {
-    background: "white",
-    padding: 15,
-    borderRadius: 10,
-    display: "flex",
-    justifyContent: "space-between",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
-  },
-
-  noteTitle: {
-    fontWeight: "600",
-  },
-
-  noteActions: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-  },
-
-  link: {
-    color: "#4f46e5",
-    fontWeight: "500",
-  },
-
-  deleteBtn: {
+  dangerBtn: {
     background: "#ef4444",
-    color: "white",
+    color: "#fff",
     border: "none",
     padding: "6px 10px",
     borderRadius: 6,
   },
 
-  backBtn: {
-    marginBottom: 10,
-    cursor: "pointer",
+  notes: { display: "grid", gap: 12 },
+
+  note: {
+    background: "#fff",
+    padding: 16,
+    borderRadius: 10,
+    display: "flex",
+    justifyContent: "space-between",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
   },
+
+  noteTitle: { fontWeight: 500 },
+
+  meta: { fontSize: 12, color: "#6b7280" },
+
+  actions: { display: "flex", gap: 10, alignItems: "center" },
+
+  link: { color: "#6366f1", fontWeight: 500 },
+
+  backBtn: { marginBottom: 10, cursor: "pointer" },
 
   login: {
     height: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg, #4f46e5, #9333ea)",
+    background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
   },
 
   loginCard: {
-    background: "white",
-    padding: 30,
+    background: "#fff",
+    padding: 32,
     borderRadius: 12,
     display: "flex",
     flexDirection: "column",
-    gap: 10,
-    width: 280,
+    gap: 12,
+    width: 300,
   },
 
-  loginTitle: {
-    marginBottom: 10,
-    textAlign: "center",
-  },
-
-  input: {
-    padding: 10,
-    borderRadius: 6,
-    border: "1px solid #ccc",
-  },
-
-  logout: {
-    padding: "6px 10px",
-    borderRadius: 6,
-    border: "none",
-    cursor: "pointer",
-  },
+  loginTitle: { textAlign: "center", marginBottom: 10 },
 };
