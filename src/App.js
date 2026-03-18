@@ -23,7 +23,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDDbdNTJ-x4gyD0VsyNfX6czmTHX_fDiaM",
   authDomain: "notesmba-5379c.firebaseapp.com",
   projectId: "notesmba-5379c",
-  storageBucket: "notesmba-5379c.firebasestorage.app",
+  storageBucket: "notesmba-5379c.appspot.com",
   messagingSenderId: "969677120738",
   appId: "1:969677120738:web:617750a5c8e1bdd6722abb"
 };
