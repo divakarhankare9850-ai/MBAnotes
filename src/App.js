@@ -274,7 +274,6 @@ function Login({ onLogin }) {
   );
 }
 
-/* ================= DESIGN SYSTEM ================= */
 const styles = {
   app: {
     minHeight: "100vh",
@@ -293,42 +292,45 @@ const styles = {
   headerContent: {
     maxWidth: 1200,
     margin: "0 auto",
-    padding: "18px 28px",
+    padding: "16px 20px",
     display: "flex",
     justifyContent: "space-between",
+    flexWrap: "wrap",
+    gap: 10,
   },
 
   logo: {
     fontWeight: 700,
-    fontSize: 20,
+    fontSize: "clamp(16px, 2vw, 20px)",
   },
 
   userSection: {
     display: "flex",
-    gap: 14,
+    gap: 10,
     alignItems: "center",
+    flexWrap: "wrap",
   },
 
   userText: {
     color: "#475569",
-    fontSize: 14,
+    fontSize: 13,
   },
 
   main: {
     maxWidth: 1200,
     margin: "0 auto",
-    padding: "40px 28px",
+    padding: "clamp(20px,4vw,40px)",
   },
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
-    gap: 24,
+    gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+    gap: "clamp(14px,2vw,24px)",
   },
 
   card: {
     background: "#ffffff",
-    padding: 26,
+    padding: "clamp(18px,3vw,26px)",
     borderRadius: 16,
     border: "1px solid #e5e7eb",
     cursor: "pointer",
@@ -337,79 +339,89 @@ const styles = {
   },
 
   cardIcon: {
-    fontSize: 30,
-    marginBottom: 12,
+    fontSize: "clamp(22px,4vw,30px)",
+    marginBottom: 10,
   },
 
   cardText: {
     fontWeight: 600,
-    fontSize: 15,
+    fontSize: "clamp(14px,2vw,15px)",
     color: "#0f172a",
   },
 
   content: {
     maxWidth: 760,
     margin: "0 auto",
+    width: "100%",
   },
 
   heading: {
-    marginBottom: 24,
-    fontSize: 22,
+    marginBottom: 20,
+    fontSize: "clamp(18px,3vw,22px)",
     fontWeight: 600,
   },
 
   upload: {
     display: "flex",
-    gap: 12,
-    marginBottom: 24,
+    gap: 10,
+    marginBottom: 20,
+    flexWrap: "wrap",
   },
 
   input: {
-    padding: "12px 14px",
+    padding: "10px 12px",
     borderRadius: 10,
     border: "1px solid #e2e8f0",
+    flex: 1,
+    minWidth: 140,
   },
 
   primaryBtn: {
     background: "linear-gradient(135deg,#6366f1,#4f46e5)",
     color: "white",
-    padding: "11px 18px",
+    padding: "10px 16px",
     borderRadius: 10,
     border: "none",
     cursor: "pointer",
+    whiteSpace: "nowrap",
   },
 
   secondaryBtn: {
     background: "#f1f5f9",
-    padding: "8px 14px",
+    padding: "8px 12px",
     borderRadius: 8,
     border: "1px solid #e2e8f0",
+    cursor: "pointer",
   },
 
   dangerBtn: {
     background: "#ef4444",
     color: "white",
-    padding: "6px 12px",
+    padding: "6px 10px",
     borderRadius: 8,
     border: "none",
+    cursor: "pointer",
   },
 
   notes: {
     display: "grid",
-    gap: 14,
+    gap: 12,
   },
 
   note: {
     background: "#ffffff",
-    padding: 18,
+    padding: 16,
     borderRadius: 14,
     border: "1px solid #e5e7eb",
     display: "flex",
     justifyContent: "space-between",
+    flexWrap: "wrap",
+    gap: 10,
   },
 
   noteTitle: {
     fontWeight: 500,
+    wordBreak: "break-word",
   },
 
   meta: {
@@ -419,8 +431,9 @@ const styles = {
 
   actions: {
     display: "flex",
-    gap: 12,
+    gap: 10,
     alignItems: "center",
+    flexWrap: "wrap",
   },
 
   link: {
@@ -430,7 +443,7 @@ const styles = {
   },
 
   backBtn: {
-    marginBottom: 16,
+    marginBottom: 14,
     background: "transparent",
     border: "none",
     color: "#4f46e5",
@@ -442,24 +455,26 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    padding: 16,
     background: "linear-gradient(135deg,#6366f1,#4f46e5)",
   },
 
   loginCard: {
     background: "#ffffff",
-    padding: 36,
+    padding: "clamp(24px,5vw,36px)",
     borderRadius: 18,
     display: "flex",
     flexDirection: "column",
-    gap: 14,
-    width: 300,
+    gap: 12,
+    width: "100%",
+    maxWidth: 340,
     boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
   },
 
   loginTitle: {
-    marginBottom: 14,
+    marginBottom: 10,
     textAlign: "center",
     fontWeight: 600,
-    fontSize: 20,
+    fontSize: "clamp(18px,3vw,20px)",
   },
 };
