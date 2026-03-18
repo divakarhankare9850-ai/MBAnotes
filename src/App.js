@@ -23,7 +23,7 @@ const firebaseConfig = {
   projectId: "notesmba-5379c",
   storageBucket: "notesmba-5379c.appspot.com",
   messagingSenderId: "969677120738",
-  appId: "1:969677120738:web:617750a5c8e1bdd6722abb"
+  appId: "1:969677120738:web:617750a5c8e1bdd6722abb",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -143,10 +143,14 @@ export default function App() {
     <div style={styles.app}>
       <header style={styles.header}>
         <div style={styles.headerContent}>
-          <h3 style={styles.logo}>Notes</h3>
+          <h3 style={styles.logo}>📚 Notes Portal</h3>
           <div style={styles.userSection}>
-            <span style={styles.userText}>{user} ({role})</span>
-            <button onClick={logout} style={styles.secondaryBtn}>Logout</button>
+            <span style={styles.userText}>
+              {user} ({role})
+            </span>
+            <button onClick={logout} style={styles.secondaryBtn}>
+              Logout
+            </button>
           </div>
         </div>
       </header>
@@ -162,6 +166,12 @@ export default function App() {
                   setSelectedSubject(sub);
                   fetchNotes(sub.id);
                 }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "translateY(-6px)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "translateY(0px)")
+                }
               >
                 <div style={styles.cardIcon}>{sub.icon}</div>
                 <div style={styles.cardText}>{sub.name}</div>
@@ -170,7 +180,10 @@ export default function App() {
           </div>
         ) : (
           <div style={styles.content}>
-            <button style={styles.backBtn} onClick={() => setSelectedSubject(null)}>
+            <button
+              style={styles.backBtn}
+              onClick={() => setSelectedSubject(null)}
+            >
               ← Back
             </button>
 
@@ -241,9 +254,18 @@ function Login({ onLogin }) {
   return (
     <div style={styles.login}>
       <div style={styles.loginCard}>
-        <h2 style={styles.loginTitle}>Sign in</h2>
-        <input style={styles.input} placeholder="Username" onChange={(e) => setU(e.target.value)} />
-        <input style={styles.input} type="password" placeholder="Password" onChange={(e) => setP(e.target.value)} />
+        <h2 style={styles.loginTitle}>Welcome Back</h2>
+        <input
+          style={styles.input}
+          placeholder="Username"
+          onChange={(e) => setU(e.target.value)}
+        />
+        <input
+          style={styles.input}
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setP(e.target.value)}
+        />
         <button style={styles.primaryBtn} onClick={() => onLogin(u, p)}>
           Continue
         </button>
@@ -256,123 +278,131 @@ function Login({ onLogin }) {
 const styles = {
   app: {
     minHeight: "100vh",
-    background: "#f9fafb",
+    background: "linear-gradient(180deg,#f8fafc,#eef2ff)",
     fontFamily: "Inter, system-ui, sans-serif",
   },
 
   header: {
-    background: "#ffffff",
+    position: "sticky",
+    top: 0,
+    backdropFilter: "blur(10px)",
+    background: "rgba(255,255,255,0.7)",
     borderBottom: "1px solid #e5e7eb",
   },
 
   headerContent: {
-    maxWidth: 1100,
+    maxWidth: 1200,
     margin: "0 auto",
-    padding: "16px 24px",
+    padding: "18px 28px",
     display: "flex",
     justifyContent: "space-between",
   },
 
   logo: {
-    fontWeight: 600,
+    fontWeight: 700,
+    fontSize: 20,
   },
 
   userSection: {
     display: "flex",
-    gap: 12,
+    gap: 14,
     alignItems: "center",
   },
 
   userText: {
-    color: "#6b7280",
+    color: "#475569",
     fontSize: 14,
   },
 
   main: {
-    maxWidth: 1100,
+    maxWidth: 1200,
     margin: "0 auto",
-    padding: 32,
+    padding: "40px 28px",
   },
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
-    gap: 20,
+    gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
+    gap: 24,
   },
 
   card: {
     background: "#ffffff",
-    padding: 24,
-    borderRadius: 12,
+    padding: 26,
+    borderRadius: 16,
     border: "1px solid #e5e7eb",
     cursor: "pointer",
-    transition: "all 0.2s ease",
+    transition: "all 0.25s ease",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.04)",
   },
 
   cardIcon: {
-    fontSize: 28,
-    marginBottom: 10,
+    fontSize: 30,
+    marginBottom: 12,
   },
 
   cardText: {
-    fontWeight: 500,
+    fontWeight: 600,
+    fontSize: 15,
+    color: "#0f172a",
   },
 
   content: {
-    maxWidth: 700,
+    maxWidth: 760,
     margin: "0 auto",
   },
 
   heading: {
-    marginBottom: 20,
+    marginBottom: 24,
+    fontSize: 22,
+    fontWeight: 600,
   },
 
   upload: {
     display: "flex",
-    gap: 10,
-    marginBottom: 20,
+    gap: 12,
+    marginBottom: 24,
   },
 
   input: {
-    padding: 10,
-    borderRadius: 8,
-    border: "1px solid #d1d5db",
-    outline: "none",
+    padding: "12px 14px",
+    borderRadius: 10,
+    border: "1px solid #e2e8f0",
   },
 
   primaryBtn: {
-    background: "#4f46e5",
+    background: "linear-gradient(135deg,#6366f1,#4f46e5)",
     color: "white",
-    padding: "10px 16px",
-    borderRadius: 8,
+    padding: "11px 18px",
+    borderRadius: 10,
     border: "none",
     cursor: "pointer",
   },
 
   secondaryBtn: {
-    background: "#f3f4f6",
-    padding: "8px 12px",
-    borderRadius: 6,
-    border: "none",
+    background: "#f1f5f9",
+    padding: "8px 14px",
+    borderRadius: 8,
+    border: "1px solid #e2e8f0",
   },
 
   dangerBtn: {
     background: "#ef4444",
     color: "white",
-    padding: "6px 10px",
-    borderRadius: 6,
+    padding: "6px 12px",
+    borderRadius: 8,
     border: "none",
   },
 
   notes: {
     display: "grid",
-    gap: 12,
+    gap: 14,
   },
 
   note: {
-    background: "#fff",
-    padding: 16,
-    borderRadius: 10,
+    background: "#ffffff",
+    padding: 18,
+    borderRadius: 14,
     border: "1px solid #e5e7eb",
     display: "flex",
     justifyContent: "space-between",
@@ -384,22 +414,27 @@ const styles = {
 
   meta: {
     fontSize: 12,
-    color: "#6b7280",
+    color: "#64748b",
   },
 
   actions: {
     display: "flex",
-    gap: 10,
+    gap: 12,
     alignItems: "center",
   },
 
   link: {
     color: "#4f46e5",
     fontWeight: 500,
+    textDecoration: "none",
   },
 
   backBtn: {
-    marginBottom: 10,
+    marginBottom: 16,
+    background: "transparent",
+    border: "none",
+    color: "#4f46e5",
+    cursor: "pointer",
   },
 
   login: {
@@ -407,22 +442,24 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "#f3f4f6",
+    background: "linear-gradient(135deg,#6366f1,#4f46e5)",
   },
 
   loginCard: {
-    background: "#fff",
-    padding: 32,
-    borderRadius: 12,
-    border: "1px solid #e5e7eb",
+    background: "#ffffff",
+    padding: 36,
+    borderRadius: 18,
     display: "flex",
     flexDirection: "column",
-    gap: 12,
-    width: 280,
+    gap: 14,
+    width: 300,
+    boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
   },
 
   loginTitle: {
-    marginBottom: 10,
+    marginBottom: 14,
     textAlign: "center",
+    fontWeight: 600,
+    fontSize: 20,
   },
 };
