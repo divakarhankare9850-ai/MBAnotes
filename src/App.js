@@ -128,11 +128,9 @@ export default function App() {
 
     try {
       await deleteDoc(doc(db, "notes_" + selectedSubject.id, note.id));
-
       await deleteObject(
         ref(storage, `notes/${selectedSubject.id}/${note.name}`)
       );
-
       fetchNotes(selectedSubject.id);
     } catch {
       alert("Delete failed");
@@ -145,70 +143,74 @@ export default function App() {
     <div style={styles.container}>
       <Navbar user={user} role={role} logout={logout} />
 
-      {!selectedSubject ? (
-        <div style={styles.grid}>
-          {SUBJECTS.map((sub) => (
-            <div
-              key={sub.id}
-              style={{ ...styles.card, background: sub.color }}
-              onClick={() => {
-                setSelectedSubject(sub);
-                fetchNotes(sub.id);
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.06)"}
-              onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-            >
-              <h2 style={{ fontSize: 32 }}>{sub.icon}</h2>
-              <p style={{ fontWeight: "600" }}>{sub.name}</p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div style={{ padding: 25 }}>
-          <button style={styles.backBtn} onClick={() => setSelectedSubject(null)}>
-            ← Back
-          </button>
-
-          <h2 style={{ marginBottom: 10 }}>
-            {selectedSubject.icon} {selectedSubject.name}
-          </h2>
-
-          {role === "admin" && (
-            <div style={styles.uploadBox}>
-              <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-              <button onClick={uploadNote} style={styles.btn}>
-                Upload
-              </button>
-            </div>
-          )}
-
-          {loading && <p>Loading...</p>}
-          {!loading && notes.length === 0 && <p>No notes available</p>}
-
-          <div style={styles.notesList}>
-            {notes.map((note) => (
-              <div key={note.id} style={styles.noteCard}>
-                <div>
-                  <p style={{ fontWeight: "600" }}>{note.name}</p>
-                  <small>{note.createdAt}</small>
-                </div>
-
-                <div>
-                  <a href={note.url} target="_blank" rel="noreferrer">
-                    Open
-                  </a>
-
-                  {role === "admin" && (
-                    <button onClick={() => deleteNote(note)} style={styles.deleteBtn}>
-                      Delete
-                    </button>
-                  )}
+      <div style={styles.contentWrapper}>
+        {!selectedSubject ? (
+          <div style={styles.grid}>
+            {SUBJECTS.map((sub) => (
+              <div
+                key={sub.id}
+                style={{ ...styles.card, background: sub.color }}
+                onClick={() => {
+                  setSelectedSubject(sub);
+                  fetchNotes(sub.id);
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-6px)"}
+                onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0px)"}
+              >
+                <div style={styles.cardInner}>
+                  <div style={styles.icon}>{sub.icon}</div>
+                  <p style={styles.cardTitle}>{sub.name}</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div style={styles.subjectPage}>
+            <button style={styles.backBtn} onClick={() => setSelectedSubject(null)}>
+              ← Back
+            </button>
+
+            <h2 style={styles.heading}>
+              {selectedSubject.icon} {selectedSubject.name}
+            </h2>
+
+            {role === "admin" && (
+              <div style={styles.uploadBox}>
+                <input style={styles.fileInput} type="file" onChange={(e) => setFile(e.target.files[0])} />
+                <button onClick={uploadNote} style={styles.btn}>
+                  Upload
+                </button>
+              </div>
+            )}
+
+            {loading && <p>Loading...</p>}
+            {!loading && notes.length === 0 && <p>No notes available</p>}
+
+            <div style={styles.notesList}>
+              {notes.map((note) => (
+                <div key={note.id} style={styles.noteCard}>
+                  <div>
+                    <p style={styles.noteTitle}>{note.name}</p>
+                    <small>{note.createdAt}</small>
+                  </div>
+
+                  <div style={styles.noteActions}>
+                    <a style={styles.link} href={note.url} target="_blank" rel="noreferrer">
+                      Open
+                    </a>
+
+                    {role === "admin" && (
+                      <button onClick={() => deleteNote(note)} style={styles.deleteBtn}>
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -220,12 +222,14 @@ function Login({ onLogin }) {
 
   return (
     <div style={styles.login}>
-      <h2 style={{ marginBottom: 10 }}>📚 College Notes Portal</h2>
-      <input style={styles.input} placeholder="Username" onChange={(e) => setU(e.target.value)} />
-      <input style={styles.input} type="password" placeholder="Password" onChange={(e) => setP(e.target.value)} />
-      <button style={styles.btn} onClick={() => onLogin(u, p)}>
-        Login
-      </button>
+      <div style={styles.loginCard}>
+        <h2 style={styles.loginTitle}>📚 Notes Portal</h2>
+        <input style={styles.input} placeholder="Username" onChange={(e) => setU(e.target.value)} />
+        <input style={styles.input} type="password" placeholder="Password" onChange={(e) => setP(e.target.value)} />
+        <button style={styles.btn} onClick={() => onLogin(u, p)}>
+          Login
+        </button>
+      </div>
     </div>
   );
 }
@@ -234,9 +238,9 @@ function Login({ onLogin }) {
 function Navbar({ user, role, logout }) {
   return (
     <div style={styles.nav}>
-      <h3>📘 Notes SaaS</h3>
-      <div>
-        {user} ({role})
+      <h3 style={{ fontWeight: "600" }}>📘 Notes Dashboard</h3>
+      <div style={styles.navRight}>
+        <span>{user} ({role})</span>
         <button onClick={logout} style={styles.logout}>Logout</button>
       </div>
     </div>
@@ -247,89 +251,159 @@ function Navbar({ user, role, logout }) {
 const styles = {
   container: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #1f4037, #99f2c8)",
-    color: "white",
-    fontFamily: "Poppins, sans-serif",
+    background: "#f5f7fb",
+    fontFamily: "system-ui",
   },
+
   nav: {
     display: "flex",
     justifyContent: "space-between",
-    padding: 15,
-    background: "rgba(0,0,0,0.4)",
-    backdropFilter: "blur(10px)",
+    padding: "15px 30px",
+    background: "#4f46e5",
+    color: "white",
   },
-  logout: {
-    marginLeft: 10,
-    padding: "6px 12px",
-    borderRadius: 6,
-    border: "none",
-    cursor: "pointer",
+
+  navRight: {
+    display: "flex",
+    alignItems: "center",
+    gap: 15,
   },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px,1fr))",
-    gap: 25,
+
+  contentWrapper: {
     padding: 30,
   },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px,1fr))",
+    gap: 25,
+  },
+
   card: {
     padding: 25,
     borderRadius: 16,
-    cursor: "pointer",
-    textAlign: "center",
     color: "white",
+    cursor: "pointer",
     transition: "0.3s",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+    boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
   },
-  uploadBox: {
-    margin: "20px 0",
+
+  cardInner: {
+    textAlign: "center",
   },
-  btn: {
-    marginLeft: 10,
-    padding: "10px 18px",
-    border: "none",
-    borderRadius: 8,
-    background: "linear-gradient(135deg, #667eea, #764ba2)",
-    color: "white",
-    cursor: "pointer",
-  },
-  backBtn: {
+
+  icon: {
+    fontSize: 32,
     marginBottom: 10,
   },
+
+  cardTitle: {
+    fontWeight: "600",
+  },
+
+  subjectPage: {
+    maxWidth: 900,
+    margin: "auto",
+  },
+
+  heading: {
+    marginBottom: 20,
+  },
+
+  uploadBox: {
+    display: "flex",
+    gap: 10,
+    marginBottom: 20,
+  },
+
+  fileInput: {
+    padding: 8,
+  },
+
+  btn: {
+    padding: "10px 16px",
+    borderRadius: 8,
+    border: "none",
+    background: "#4f46e5",
+    color: "white",
+    cursor: "pointer",
+  },
+
   notesList: {
     display: "grid",
     gap: 15,
   },
+
   noteCard: {
-    background: "rgba(255,255,255,0.9)",
-    color: "#333",
+    background: "white",
     padding: 15,
-    borderRadius: 12,
+    borderRadius: 10,
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
   },
+
+  noteTitle: {
+    fontWeight: "600",
+  },
+
+  noteActions: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+  },
+
+  link: {
+    color: "#4f46e5",
+    fontWeight: "500",
+  },
+
   deleteBtn: {
-    marginLeft: 10,
-    background: "#ff4b5c",
+    background: "#ef4444",
     color: "white",
     border: "none",
-    padding: "6px 12px",
+    padding: "6px 10px",
     borderRadius: 6,
+  },
+
+  backBtn: {
+    marginBottom: 10,
     cursor: "pointer",
   },
+
   login: {
     height: "100vh",
     display: "flex",
-    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    gap: 15,
-    background: "linear-gradient(135deg, #667eea, #764ba2)",
+    background: "linear-gradient(135deg, #4f46e5, #9333ea)",
   },
+
+  loginCard: {
+    background: "white",
+    padding: 30,
+    borderRadius: 12,
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+    width: 280,
+  },
+
+  loginTitle: {
+    marginBottom: 10,
+    textAlign: "center",
+  },
+
   input: {
-    padding: 12,
-    width: 260,
-    borderRadius: 8,
+    padding: 10,
+    borderRadius: 6,
+    border: "1px solid #ccc",
+  },
+
+  logout: {
+    padding: "6px 10px",
+    borderRadius: 6,
     border: "none",
+    cursor: "pointer",
   },
 };
