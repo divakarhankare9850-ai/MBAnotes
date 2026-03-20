@@ -120,7 +120,7 @@ export default function App() {
     );
 
     const data = await res.json();
-
+    console.log("Cloudinary response:", data);
     const fileUrl = data.secure_url;
 
     // Save in Firestore
