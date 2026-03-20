@@ -328,7 +328,7 @@ const fileUrl = data.secure_url;
 
                       <div style={styles.noteItemActions}>
                         <a
-                          href={note.url}
+                          href={note.url.replace("/upload/", "/upload/fl_inline/")}
                           target="_blank"
                           rel="noreferrer"
                           style={styles.openBtn}
@@ -422,9 +422,6 @@ function Login({ onLogin }) {
           </form>
 
           <div style={styles.loginFooter}>
-            <p style={styles.loginHint}>
-              Demo: <code style={styles.code}>admin</code> / <code style={styles.code}>admin123</code>
-            </p>
             <p style={styles.loginHint}>
               Or any student ID: <code style={styles.code}>25PMB001</code> / <code style={styles.code}>student123</code>
             </p>
