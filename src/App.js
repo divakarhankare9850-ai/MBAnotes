@@ -97,31 +97,50 @@ export default function App() {
   };
 
   const uploadNote = async () => {
-    if (!file || !selectedSubject) return alert("Select file");
+  if (!file || !selectedSubject) return alert("Select file");
 
-    setLoading(true);
-    try {
-      const storageRef = ref(
-        storage,
-        `notes/${selectedSubject.id}/${Date.now()}_${file.name}`
-      );
+  // ✅ Optional validations
+  if (file.type !== "application/pdf") {
+    return alert("Only PDF allowed");
+  }
 
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
+  setLoading(true);
 
-      await addDoc(collection(db, "notes_" + selectedSubject.id), {
-        name: file.name,
-        url,
-        createdAt: new Date().toLocaleString(),
-      });
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "notes_upload");
 
-      setFile(null);
-      fetchNotes(selectedSubject.id);
-    } catch {
-      alert("Upload failed");
-    }
-    setLoading(false);
-  };
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dn90codg9/raw/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+
+    const fileUrl = data.secure_url;
+
+    // Save in Firestore
+    await addDoc(collection(db, "notes_" + selectedSubject.id), {
+      name: file.name,
+      url: fileUrl,
+      public_id: data.public_id,
+      createdAt: new Date().toLocaleString(),
+    });
+
+    setFile(null);
+    fetchNotes(selectedSubject.id);
+
+  } catch (error) {
+    console.error(error);
+    alert("Upload failed");
+  }
+
+  setLoading(false);
+};
 
   const deleteNote = async (note) => {
     if (!window.confirm("Delete this file?")) return;
