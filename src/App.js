@@ -8,13 +8,13 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import {
+{/*import {
   getStorage,
   ref,
   uploadBytes,
   getDownloadURL,
   deleteObject,
-} from "firebase/storage";
+} from "firebase/storage";*/}
 
 /* ================= FIREBASE CONFIG ================= */
 const firebaseConfig = {
@@ -28,7 +28,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
+{/*const storage = getStorage(app);*/}
 
 /* ================= USERS ================= */
 const ADMIN = { username: "admin", password: "admin123" };
