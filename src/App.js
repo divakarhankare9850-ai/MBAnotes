@@ -150,19 +150,23 @@ const fileUrl = data.secure_url;
   setLoading(false);
 };
 
-  const deleteNote = async (note) => {
-    if (!window.confirm("Delete this file?")) return;
+ const deleteNote = async (note) => {
+  const confirmDelete = window.confirm("Delete this file?");
+  if (!confirmDelete) return;
 
-    try {
-      await deleteDoc(doc(db, "notes_" + selectedSubject.id, note.id));
-      await deleteObject(
-        ref(storage, `notes/${selectedSubject.id}/${note.name}`)
-      );
-      fetchNotes(selectedSubject.id);
-    } catch {
-      alert("Delete failed");
-    }
-  };
+  try {
+    await deleteDoc(
+      doc(db, "notes_" + selectedSubject.id, note.id)
+    );
+
+    // Refresh notes list
+    fetchNotes(selectedSubject.id);
+
+  } catch (error) {
+    console.error(error);
+    alert("Delete failed");
+  }
+};
 
   if (page === "login") return <Login onLogin={handleLogin} />;
 
