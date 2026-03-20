@@ -328,7 +328,7 @@ const fileUrl = data.secure_url;
 
                       <div style={styles.noteItemActions}>
                         <a
-                          href={note.url.replace("/upload/", "/upload/fl_inline/")}
+                          href={note.url}
                           target="_blank"
                           rel="noreferrer"
                           style={styles.openBtn}
