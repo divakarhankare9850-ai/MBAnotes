@@ -110,7 +110,7 @@ export default function App() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "mba_notes");
-
+    formData.append("resource_type", "raw");
     const res = await fetch(
       "https://api.cloudinary.com/v1_1/dn90codg9/raw/upload",
       {
