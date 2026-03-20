@@ -109,7 +109,7 @@ export default function App() {
   try {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "notes_upload");
+    formData.append("upload_preset", "mba_notes");
 
     const res = await fetch(
       "https://api.cloudinary.com/v1_1/dn90codg9/raw/upload",
@@ -120,8 +120,16 @@ export default function App() {
     );
 
     const data = await res.json();
-    console.log("Cloudinary response:", data);
-    const fileUrl = data.secure_url;
+console.log("Cloudinary response:", data);
+
+// ❗ STOP if upload failed
+if (!data.secure_url) {
+  alert(data.error?.message || "Upload failed");
+  setLoading(false);
+  return;
+}
+
+const fileUrl = data.secure_url;
 
     // Save in Firestore
     await addDoc(collection(db, "notes_" + selectedSubject.id), {
